@@ -1,11 +1,19 @@
-import reactPlugin from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import logseqDevPlugin from "vite-plugin-logseq";
+import react from "@vitejs/plugin-react";
+import logseqPlugin from "vite-plugin-logseq";
+import { copyFileSync } from "fs";
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [logseqDevPlugin(), reactPlugin()],
-  // Makes HMR available for development
+  plugins: [
+    logseqPlugin(),
+    react(),
+    {
+      name: "copy-package-json",
+      closeBundle() {
+        copyFileSync("package.json", "dist/package.json");
+      },
+    },
+  ],
   build: {
     target: "esnext",
     minify: "esbuild",
